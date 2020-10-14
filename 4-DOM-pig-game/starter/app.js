@@ -9,40 +9,71 @@ GAME RULES:
 
 */
 
-var scores, roundScore,previousPlayer,gamePlaying;
+var scores, roundScore,previousPlayer,gamePlaying,sixSum;
 init();
 document.querySelector('.btn-roll').addEventListener('click',()=>{
    if (gamePlaying){
 
-        var dice;
-        dice=Math.floor(Math.random()*6)+1;
+        var dice1,dice2;
+        dice1=Math.floor(Math.random()*6)+1;
+        dice2=Math.floor(Math.random()*6)+1;
     
-        console.log(dice)
+        console.log(dice1)
     //add the dice image
-        var diceDOM=document.querySelector('.dice');
-        diceDOM.style.display='block';
-        diceDOM.src=(`dice-${dice}.png`);
+        var diceDOM1=document.querySelector('#dice1');
+        var diceDOM2=document.querySelector('#dice2');
+
+        diceDOM1.style.display='block';
+        diceDOM2.style.display='block';
+        diceDOM1.src=(`dice-${dice1}.png`);
+        diceDOM2.src='dice-'+dice2+'.png'
+        
+        if (dice1===6 && dice2===6){
+            
+            sixSum+=dice1+dice2;
+        
+        
+        
+            console.log(sixSum);
+            if (sixSum===12){
+                scores[activePlayer]=0;
+                document.querySelector('#score-'+activePlayer).textContent=scores[activePlayer];
+                roundScore=0;
+                activePlayerf();
+                sixSum=0;
+                dice1=0
+                dice2=0;
+                
+            } 
+               
+        } 
+         
+        
+
+         if(dice1!==1 && dice2!==1 ){
+            roundScore+=dice1+dice2;
+
+            document.querySelector('#current-'+activePlayer).textContent=roundScore;
+
+    
+   
+        } else 
+    
+    
+    //Next player
+            activePlayerf();
+    
+
+            
+        }
    
     
     
-    //document.querySelector('#current-'+activePlayer).innerHTML=roundScore;
-        console.log(scores);
-        if(dice!==1){
-        roundScore+=dice;
-
-        document.querySelector('#current-'+activePlayer).textContent=roundScore;
-
-        
-       
-        } else {
-        
-        
-        //Next player
-        activePlayerf();
-        
     
-        }
-   }
+    //document.querySelector('#current-'+activePlayer).innerHTML=roundScore;
+        //console.log(scores);
+      
+            
 
 
 });
@@ -56,9 +87,10 @@ document.querySelector('.btn-hold').addEventListener('click',()=>{
         //update UI
         document.querySelector('#score-'+activePlayer).textContent=scores[activePlayer];
         //check if player won the game
-        if (scores[activePlayer]>=100){
+        if (scores[activePlayer]>=document.querySelector('#your-score').value){
             document.querySelector('#name-'+activePlayer).textContent='Winner!';
-            document.querySelector('.dice').style.display='none';
+            document.querySelector('.dice1').style.display='none';
+            document.querySelector('.dice2').style.display='none';
             document.querySelector('.player-'+activePlayer+'-panel').classList.add('winner');
             document.querySelector('.player-'+activePlayer+'-panel').classList.remove('active');
             gamePlaying=false;
@@ -90,26 +122,30 @@ function activePlayerf(){
     activePlayer==0?previousPlayer=0:previousPlayer=1;
     //set previous player's score to  Zero
     activePlayer===0?activePlayer=1:activePlayer=0;
+    document.querySelector('#current-'+activePlayer).textContent='0';
     document.querySelector('#current-'+previousPlayer).textContent='0';
     roundScore=0;
     document.querySelector('.player-'+previousPlayer+'-panel').classList.toggle('active');
     document.querySelector('.player-'+activePlayer+'-panel').classList.toggle('active');
-    document.querySelector('.dice').style.display='none';
+    document.querySelector('.dice1').style.display='none';
+    document.querySelector('.dice2').style.display='none';
 
 }
 //start a new game when btn-new is selected
 document.querySelector('.btn-new').addEventListener('click',init);
 
 function init(){
+    sixSum=0;
     scores=[0,0];
     roundScore=0;
     activePlayer=0;
-    gameplaying=true;
+    gamePlaying=true;
     
     //also try innertext & textContent
     
     //initally disable the dice
-    document.querySelector('.dice').style.display='none';
+    document.querySelector('.dice1').style.display='none';
+    document.querySelector('.dice2').style.display='none';
     document.getElementById('score-0').textContent='0';
     document.getElementById('score-1').textContent='0';
     document.getElementById('current-0').textContent='0';
